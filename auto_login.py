@@ -7,6 +7,7 @@
 '''
 
 import pdb
+import urllib
 
 def load_env():
     env_vars = {}
@@ -25,20 +26,29 @@ def load_env():
     
     return env_vars
 
-def internet_is_ok():
+def internet_is_ok(env):
     # TODO: procurar uma forma de checkar se a internet esta pegando sem uso de libs externas
     pass
 
-def login():
+def login(env):
     # TODO: realizar POST para realizar login sem uso de libs externas
+    params = {
+            'username': env['USERNAME'],
+            'PASSWORD': env['PASSWORD']
+        }
+    query = urllib.urlencode(params)
+    f = urllib.urlopen(url, query)
+    contents = f.read()
+    f.close()
+    pdb.set_trace()
     pass
 
 def main():
     env = load_env()
     
-    while(not internet_is_ok()):
+    while(not internet_is_ok(env)):
         print('Applying login...')
-        login()
+        login(env)
     else:
         print("Internet is ok.")
 
