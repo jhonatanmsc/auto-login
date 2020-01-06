@@ -26,9 +26,11 @@ def load_env():
     return env_vars
 
 def internet_is_ok():
+    # TODO: procurar uma forma de checkar se a internet esta pegando sem uso de libs externas
     pass
 
 def login():
+    # TODO: realizar POST para realizar login sem uso de libs externas
     pass
 
 def main():
