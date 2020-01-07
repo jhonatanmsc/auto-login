@@ -7,11 +7,9 @@
 '''
 
 import pdb
-import http.client as httplib
 import urllib
 import urllib.parse
 import urllib.request
-import datetime
 import ssl
 from time import sleep
 
@@ -33,19 +31,9 @@ def load_env():
     
     return env_vars
 
-def is_online(env):
-    conn = httplib.HTTPConnection(env['URL_TEST'], 80, timeout=5)
-    try:
-        conn.request("HEAD", "/")
-        conn.close()
-        return True
-    except:
-        conn.close()
-        return False
-
 def login(env):
     # TODO: check if works :D
-    myssl = ssl.create_default_context();
+    myssl = ssl.create_default_context()
     myssl.check_hostname=False
     myssl.verify_mode=ssl.CERT_NONE
     params = {
@@ -69,15 +57,13 @@ def main():
     env = load_env()
     while(True):
         print('\nPS: to break press CTRL-C...')
-        if(not is_online(env)):
-            print('You is offline, applying login as %s...' % env['USERNAME'])
-            try:
-                res = login(env)
-                print('%d - %s - %s' % (res.status, res.msg, res.getheader('Expires')))
-            except Exception as e:
-                print(e)
-        else:
-            print('You is logged as %s!' % env['USERNAME'])
+        print('You is offline, applying login as %s...' % env['USERNAME'])
+        try:
+            res = login(env)
+            print('%d - %s - %s' % (res.status, res.msg, res.getheader('Expires')))
+        except Exception as e:
+            print(e)
+        print('sleep for 5 min...')
         sleep(300)
 
 if __name__ == '__main__':
