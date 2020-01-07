@@ -7,9 +7,16 @@
 '''
 
 import pdb
+import http.client as httplib
 import urllib
+import urllib.parse
+import urllib.request
+import datetime
+import ssl
+from time import sleep
 
 def load_env():
+    # TODO: in test fase
     env_vars = {}
     with open('.env') as f:
         for line in f:
@@ -26,34 +33,52 @@ def load_env():
     
     return env_vars
 
-def internet_is_ok(env):
-    # TODO: procurar uma forma de checkar se a internet esta pegando sem uso de libs externas
-    pass
+def is_online(env):
+    conn = httplib.HTTPConnection(env['URL_TEST'], 80, timeout=5)
+    try:
+        conn.request("HEAD", "/")
+        conn.close()
+        return True
+    except:
+        conn.close()
+        return False
 
 def login(env):
-    # TODO: realizar POST para realizar login sem uso de libs externas
+    # TODO: check if works :D
+    myssl = ssl.create_default_context();
+    myssl.check_hostname=False
+    myssl.verify_mode=ssl.CERT_NONE
     params = {
-            'username': env['USERNAME'],
-            'PASSWORD': env['PASSWORD']
+            'buttonClicked': env['BTN_CLICKED'],
+            'err_flag': env['ERR_FLAG'],
+            'err_msg': '',
+            'info_flag': env['INFO_FLAG'],
+            'info_msg': '',
+            'redirect_url': '',	
+            'network_name': env['NETWORK_NAME'],
+            'username': 	env['USERNAME'],
+            'password': 	env['PASSWORD']
         }
-    query = urllib.urlencode(params)
-    f = urllib.urlopen(url, query)
-    contents = f.read()
-    f.close()
-    pdb.set_trace()
-    pass
+    query = urllib.parse.urlencode(params).encode("utf-8")
+    res = urllib.request.urlopen(env['URL'], query, context=myssl)
+    # pdb.set_trace()
+    res.close()
+    return res
 
 def main():
     env = load_env()
-    
-    while(not internet_is_ok(env)):
-        print('Applying login...')
-        login(env)
-    else:
-        print("Internet is ok.")
-
-    print(env)
-
+    while(True):
+        print('\nPS: to break press CTRL-C...')
+        if(not is_online(env)):
+            print('You is offline, applying login as %s...' % env['USERNAME'])
+            try:
+                res = login(env)
+                print('%d - %s - %s' % (res.status, res.msg, res.getheader('Expires')))
+            except Exception as e:
+                print(e)
+        else:
+            print('You is logged as %s!' % env['USERNAME'])
+        sleep(300)
 
 if __name__ == '__main__':
     main()
