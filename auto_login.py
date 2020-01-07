@@ -55,16 +55,18 @@ def login(env):
 
 def main():
     env = load_env()
+    print('\nPS: to break press CTRL-C...')
+    print('Applying login as %s\n' % env['USERNAME'])
     while(True):
-        print('\nPS: to break press CTRL-C...')
-        print('You is offline, applying login as %s...' % env['USERNAME'])
         try:
             res = login(env)
             print('%d - %s - %s' % (res.status, res.msg, res.getheader('Expires')))
+            print('sleep for 5 min...')
+            sleep(300)
         except Exception as e:
             print(e)
-        print('sleep for 5 min...')
-        sleep(300)
+            sleep(5)
+        
 
 if __name__ == '__main__':
     main()
