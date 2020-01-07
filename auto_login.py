@@ -55,7 +55,7 @@ def login(env):
 
 def main():
     env = load_env()
-    print('\nPS: to break press CTRL-C...')
+    print('\nPS: to exit press CTRL-C...')
     print('Applying login as %s\n' % env['USERNAME'])
     while(True):
         try:
