@@ -9,7 +9,7 @@ Script de auto login na rede do ifpi campus central
 ```bash
 $ cp .env.example .env
 ```
-2. depois modifique o arquivo env com seu login e senha
+2. depois modifique o arquivo env com a url de login, seu username e senha
 3. execute o script
 ```bash
 $ python auto_login.py
